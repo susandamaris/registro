@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea Tu Correo Electrónico</title>
+    <link rel="stylesheet" href="estilos\style.css">
+    <script>
+        function obtenerLetrasAleatorias(cadena) {
+            let seleccionadas = [];
+            while (seleccionadas.length < 2) {
+                let letra = cadena[Math.floor(Math.random() * cadena.length)];
+                if (!seleccionadas.includes(letra)) seleccionadas.push(letra);
+            }
+            return seleccionadas.join('');
+        }
+
+        function generarCorreo() {
+            let nombre1 = document.getElementById('nombre1').value.trim();
+            let nombre2 = document.getElementById('nombre2').value.trim() || nombre1;
+            let apellido1 = document.getElementById('apellido1').value.trim();
+            let apellido2 = document.getElementById('apellido2').value.trim() || apellido1;
+            let fecha = document.getElementById('fechaNacimiento').value.split('-');
+
+            let correo = obtenerLetrasAleatorias(nombre1) +
+                         obtenerLetrasAleatorias(nombre2) +
+                         obtenerLetrasAleatorias(apellido1) +
+                         obtenerLetrasAleatorias(apellido2) +
+                         fecha[Math.floor(Math.random() * 3)];
+
+            document.getElementById('correoGenerado').value = (correo + '@gmail.com').toLowerCase();
+
+            // Habilitar el campo de la contraseña
+            document.getElementById('contraseña').disabled = false;
+
+            // Desplazar la vista a la sección de contraseña
+            document.getElementById('contraseña').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function validarContraseña() {
+            let contraseña = document.getElementById('contraseña').value;
+            let mensaje = document.getElementById('mensajeContraseña');
+
+            let regex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.\W).{8,}$/;
+            let valido = regex.test(contraseña);
+            mensaje.style.color = valido ? "green" : "red";
+            mensaje.textContent = valido ? "Contraseña válida" : "Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un dígito y un carácter especial";
+            return valido;
+        }
+
+        function mostrarContraseña() {
+            let tipo = document.getElementById('contraseña').type === 'password' ? 'text' : 'password';
+            document.getElementById('contraseña').type = tipo;
+        }
+    </script>
+</head>
+<body>
+    <h1>Crea Tu Correo Electrónico</h1>
+    <form action="javascript:void(0)">
+        <label>Primer Nombre:</label><br>
+        <input type="text" id="nombre1" required><br><br>
+
+        <label>Segundo Nombre:</label><br>
+        <input type="text" id="nombre2"><br><br>
+
+        <label>Apellido Paterno:</label><br>
+        <input type="text" id="apellido1" required><br><br>
+
+        <label>Apellido Materno:</label><br>
+        <input type="text" id="apellido2"><br><br>
+
+        <label>Fecha de Nacimiento:</label><br>
+        <input type="date" id="fechaNacimiento" required><br><br>
+
+        <button type="button" onclick="generarCorreo()">Generar Correo</button><br><br>
+
+        <label>Correo Electrónico Generado:</label><br>
+        <input type="text" id="correoGenerado" readonly><br><br>
+
+        <label>Contraseña:</label><br>
+        <input type="password" id="contraseña" disabled required onkeyup="validarContraseña()"><br><br>
+
+        <button type="button" onclick="mostrarContraseña()">Mostrar/Ocultar Contraseña</button><br><br>
+
+        <p id="mensajeContraseña"></p><br><br>
+    </form>
+</body>
+</html>
